@@ -53,7 +53,6 @@ const Order = mongoose.model("Order", orderSchema);
 const getAll = async () => {
   // populate each item
   const orders = await Order.find().populate("items.item");
-
   return orders;
 };
 
@@ -82,12 +81,63 @@ const getByStatus = async (status) => {
   return orders;
 };
 
+// Would Get endpoint that will be able to calucaulte the total price of the order
+const totalPrice = async () => {
+  const orders = await Order.find({ status: "delivered" }).populate(
+    "items.item"
+  );
+
+  const total = orders.reduce((initialVal, order) => {
+    const itemsPrice = order.items.reduce(
+      (previousValue, currentValue) =>
+        previousValue + currentValue.item.price * currentValue.quantity,
+      0
+    );
+    console.log("itemsPrice", itemsPrice);
+    return itemsPrice + initialVal;
+  }, 0);
+  console.log("total", total);
+  return total;
+};
+// Total price by date
+const totalPriceByDate = async (startDate, endDate) => {
+  const orders = await Order.find({ status: "delivered" })
+    .populate("items.item")
+    .where("createdAt")
+    .gte(startDate)
+    .lte(endDate);
+  const total = orders.reduce((initialVal, order) => {
+    const itemsPrice = order.items.reduce(
+      (previousValue, currentValue) =>
+        previousValue + currentValue.item.price * currentValue.quantity,
+      0
+    );
+    console.log("itemsPricebyData", itemsPrice);
+    return itemsPrice + initialVal;
+  }, 0);
+  console.log("totalbyDate", total);
+  return total;
+};
+
+// getByStatus by date
+const getByStatusByDate = async (startDate, endDate, status) => {
+  const orders = await Order.find({ status })
+    .populate("items.item")
+    .where("createdAt")
+    .gte(startDate)
+    .lte(endDate);
+  return orders;
+};
+
 module.exports = {
   getAll,
   getOne,
-  create,
   update,
   remove,
   getByStatus,
-  Order
+  Order,
+  create,
+  totalPrice,
+  totalPriceByDate,
+  getByStatusByDate
 };

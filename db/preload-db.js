@@ -3,6 +3,7 @@ require("dotenv").config();
 const mongoose = require("./db");
 const { create: createMenuItem } = require("./models/menuItems");
 const { create: createOrder } = require("./models/orders");
+
 // create some new menu items
 const menuItems = [
   {
@@ -185,7 +186,5 @@ const preload = async () => {
   console.log("createdOrders", createdOrders);
   if (require.main === module) process.exit(0);
 };
-if (require.main === module) {
-  preload();
-}
-module.exports = preload;
+
+preload();

@@ -1,6 +1,6 @@
 const { Router } = require("express");
-const menuRouter = require("./menuRouter");
-const orderRouter = require("./orderRouter");
+const menuRouter = require("./menuRouter.js");
+const orderRouter = require("./orderRouter.js");
 
 const apiRouter = Router();
 
