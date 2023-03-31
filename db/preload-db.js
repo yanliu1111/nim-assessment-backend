@@ -1,5 +1,6 @@
 require("dotenv").config();
 
+const mongoose = require("./db");
 const { create: createMenuItem } = require("./models/menuItems");
 const { create: createOrder } = require("./models/orders");
 // create some new menu items
@@ -58,15 +59,18 @@ const menuItems = [
 ];
 
 const preload = async () => {
+  // drop the database
+  await mongoose.connection.collections.menuitems.drop();
+  await mongoose.connection.collections.orders.drop();
   const createdMenuItems = await Promise.all(
     menuItems.map((item) => createMenuItem(item))
   );
   // eslint-disable-next-line no-console
-  console.log("createdMenuItems", createdMenuItems);
+  // console.log("createdMenuItems", createdMenuItems);
   // create some new orders
   const orders = [
     {
-      name: "John Doe",
+      name: "Krang Floogleborg",
       phone: "555-555-5555",
       address: "123 Main St",
       items: [
@@ -88,7 +92,7 @@ const preload = async () => {
       status: "delivered"
     },
     {
-      name: "Jane Doe",
+      name: "Meep Morpington",
       phone: "555-555-5555",
       address: "123 Main St",
       items: [
@@ -110,7 +114,7 @@ const preload = async () => {
       status: "cancelled"
     },
     {
-      name: "John Smith",
+      name: "Fuang The Third",
       phone: "555-555-5555",
       address: "123 Main St",
       items: [
@@ -132,7 +136,7 @@ const preload = async () => {
       status: "delivered"
     },
     {
-      name: "Jane Smith",
+      name: "Ronald McDonald",
       phone: "555-555-5555",
       address: "123 Main St",
       items: [
@@ -154,7 +158,7 @@ const preload = async () => {
       status: "delivered"
     },
     {
-      name: "John Doe",
+      name: "Bob Belcher",
       phone: "555-555-5555",
       address: "123 Main St",
       items: [
@@ -179,7 +183,9 @@ const preload = async () => {
   );
   // eslint-disable-next-line no-console
   console.log("createdOrders", createdOrders);
-  process.exit(0);
+  if (require.main === module) process.exit(0);
 };
-
-preload();
+if (require.main === module) {
+  preload();
+}
+module.exports = preload;
