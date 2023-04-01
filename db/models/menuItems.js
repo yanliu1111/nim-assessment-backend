@@ -16,6 +16,10 @@ const menuItemsSchema = new mongoose.Schema({
   },
   imageUrl: {
     type: String
+  },
+  updateAt: {
+    type: Date,
+    default: Date.now
   }
 });
 menuItemsSchema.set("toJSON", {
@@ -51,10 +55,13 @@ const create = async (body) => {
   }
 };
 
-// put endpoint
+// update orders table upateAt column at same time
 const update = async (id, body) => {
   try {
-    const menuItem = await MenuItems.findByIdAndUpdate(id, body, { new: true });
+    const menuItem = await MenuItems.findByIdAndUpdate(id, body, {
+      new: true,
+      updateAt: Date.now()
+    });
     return menuItem;
   } catch (error) {
     return error;
@@ -65,7 +72,8 @@ const update = async (id, body) => {
 const remove = async (id) => {
   try {
     const menuItem = await MenuItems.findByIdAndDelete(id);
-    return menuItem;
+    // return menuItem id
+    return menuItem._id;
   } catch (error) {
     return error;
   }

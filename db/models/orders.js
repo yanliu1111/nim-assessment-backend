@@ -83,10 +83,8 @@ const getByStatus = async (status) => {
 
 // Would Get endpoint that will be able to calucaulte the total price of the order
 const totalPrice = async () => {
-  const orders = await Order.find({ status: "delivered" }).populate(
-    "items.item"
-  );
-
+  const orders = await Order.find().populate("items.item");
+  // console.log("orders", orders);
   const total = orders.reduce((initialVal, order) => {
     const itemsPrice = order.items.reduce(
       (previousValue, currentValue) =>
